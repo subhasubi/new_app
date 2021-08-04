@@ -1,7 +1,9 @@
+import 'package:Personal_Health_Tracker/GetXController.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:Personal_Health_Tracker/BmiScreen.dart';
 import 'package:Personal_Health_Tracker/LogPage.dart';
+import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ResultPage extends StatefulWidget {
@@ -36,22 +38,23 @@ class _ResultPageState extends State<ResultPage> {
     }
   }
 
+  SessionController _sessionController = Get.find<SessionController>();
   String? resultImage = '';
   resultPageImage(value) {
     if (value == 'UnderWeight') {
-      resultImage = BmiScreen.imageGender == 'male'
+      resultImage = _sessionController.userInfo.value['Gender'] == 'male'
           ? 'image/underweight1.png'
           : 'image/girlUnderweight.png';
     } else if (value == 'Normal') {
-      resultImage = BmiScreen.imageGender == 'male'
+      resultImage = _sessionController.userInfo.value['Gender'] == 'male'
           ? 'image/normal3.png'
           : 'image/girlNormal.png';
     } else if (value == 'Overweight') {
-      resultImage = BmiScreen.imageGender == 'male'
+      resultImage = _sessionController.userInfo.value['Gender'] == 'male'
           ? 'image/overweight1.png'
           : 'image/girlOverweight.png';
     } else {
-      resultImage = BmiScreen.imageGender == 'male'
+      resultImage = _sessionController.userInfo.value['Gender'] == 'male'
           ? 'image/obesity.png'
           : 'image/girlObesity.png';
     }
@@ -77,7 +80,8 @@ class _ResultPageState extends State<ResultPage> {
       'Catergory': '${categoryValue}',
       'height': '${widget.height}',
       'weight': '${widget.weight}',
-      'age': '${widget.age}'
+      'age': '${widget.age}',
+      'date': DateTime.now()
     };
     firestore.collection('Users').doc(_mail).update({
       'log': FieldValue.arrayUnion([result])

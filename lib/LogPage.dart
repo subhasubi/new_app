@@ -1,8 +1,11 @@
 import 'package:Personal_Health_Tracker/BmiScreen.dart';
+import 'package:Personal_Health_Tracker/GetXController.dart';
 import 'package:Personal_Health_Tracker/LoginPage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:Personal_Health_Tracker/DeitPage.dart';
+import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'StyleText.dart';
@@ -18,6 +21,25 @@ class LogPage extends StatefulWidget {
 
 class _LogPageState extends State<LogPage> {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
+  SessionController _sessionController = Get.find<SessionController>();
+
+  getTime(final timeStamp) {
+    int yearFormat;
+    int monthFormat;
+    int dayFormat;
+
+    var year = DateFormat('y');
+    var month = DateFormat('MM');
+    var day = DateFormat('d');
+
+    yearFormat = int.parse(year.format(timeStamp.toDate()));
+    monthFormat = int.parse(month.format(timeStamp.toDate()));
+    dayFormat = int.parse(day.format(timeStamp.toDate()));
+
+    var logTime = DateTime(yearFormat, monthFormat, dayFormat);
+    print(logTime.runtimeType);
+    return logTime;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,9 +70,13 @@ class _LogPageState extends State<LogPage> {
                         for (dynamic i in data.docs) {
                           print('----------------');
 
-                          if (BmiScreen.userId == i.id!) {
+                          if (_sessionController.userInfo.value['Email'] ==
+                              i.id!) {
                             for (var j in i['log']) {
                               print(j);
+                              dynamic time = getTime(j['date']);
+                              time = DateFormat('dd MMM y').format(time);
+                              print(time.runtimeType);
                               Widget value = Column(
                                 children: [
                                   Row(
@@ -66,7 +92,7 @@ class _LogPageState extends State<LogPage> {
                                             style: title,
                                           ),
                                           Text(
-                                            j['BmiValue'],
+                                            time.toString(),
                                             style: TextStyle(
                                                 fontStyle: FontStyle.italic,
                                                 color: Colors.grey,

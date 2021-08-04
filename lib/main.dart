@@ -1,3 +1,4 @@
+import 'package:Personal_Health_Tracker/GetXController.dart';
 import 'package:Personal_Health_Tracker/Test.dart';
 import 'package:Personal_Health_Tracker/practice/session.dart';
 import 'package:Personal_Health_Tracker/practice/sessionHome.dart';
@@ -20,22 +21,27 @@ import 'package:Personal_Health_Tracker/StackPage.dart';
 import 'package:Personal_Health_Tracker/ViewPage.dart';
 import 'package:Personal_Health_Tracker/WelcomePage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   SharedPreferences preferences = await SharedPreferences.getInstance();
+  Get.put(SessionController());
+  SessionController _sessionController = Get.find<SessionController>();
 
   String? email = preferences.getString('Email');
-  BmiScreen.userId = email!;
+  print(email);
+  print('aaaaaaaaaaaaaaaaaaaaaaaa');
+  BmiScreen.userId = 'subha@gmail.com';
 
   runApp(
-    MaterialApp(
+    GetMaterialApp(
       theme: ThemeData.dark(),
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        body: email.isEmpty ? WelcomePage() : BmiScreen(),
+        body: email != null ? BmiScreen() : WelcomePage(),
       ),
     ),
   );

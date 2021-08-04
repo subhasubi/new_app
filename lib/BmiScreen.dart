@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:Personal_Health_Tracker/GetXController.dart';
 import 'package:Personal_Health_Tracker/LoginPage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
@@ -11,6 +12,7 @@ import 'package:Personal_Health_Tracker/ResultPage.dart';
 import 'package:Personal_Health_Tracker/StyleText.dart';
 import 'package:Personal_Health_Tracker/WelcomePage.dart';
 import 'package:Personal_Health_Tracker/constant.dart';
+import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:syncfusion_flutter_sliders/sliders.dart';
 
@@ -34,23 +36,27 @@ class _BmiScreenState extends State<BmiScreen> {
 
   // TextEditingController _weight = TextEditingController(text: '0');
   // TextEditingController _age = TextEditingController(text: '0');
-
+////
+  SessionController _sessionController = Get.find<SessionController>();
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   getSession() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     dynamic username = preferences.getString('Username');
     dynamic email = preferences.getString('Email');
-    BmiScreen.userId = preferences.getString('Email')!;
+    _sessionController.setUserSession(email);
     name = username;
     mailId = email;
+    getData();
   }
 
   getData() async {
-    var userData =
-        await firestore.collection('Users').doc(BmiScreen.userId).get();
-    print('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
-    print(userData['Gender']);
+    var userData = await firestore
+        .collection('Users')
+        .doc(_sessionController.userSession.value)
+        .get();
+
+    _sessionController.setUserInfo(userData.data());
   }
 
   @override
@@ -254,6 +260,9 @@ class _BmiScreenState extends State<BmiScreen> {
                   borderRadius: BorderRadius.circular(50)),
               child: MaterialButton(
                 onPressed: () {
+                  print(_sessionController.userSession.value);
+                  print(_sessionController.userInfo.value);
+
                   dynamic c = rate / 100;
                   bmi = (a / (c * c)).toStringAsFixed(2);
                   print(bmi);

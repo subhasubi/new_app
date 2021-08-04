@@ -1,3 +1,4 @@
+import 'package:Personal_Health_Tracker/GetXController.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -6,6 +7,7 @@ import 'package:Personal_Health_Tracker/BmiScreen.dart';
 import 'package:Personal_Health_Tracker/CustomButton.dart';
 import 'package:Personal_Health_Tracker/RegisterPage.dart';
 import 'package:Personal_Health_Tracker/StyleText.dart';
+import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
@@ -20,8 +22,12 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   TextEditingController _email = TextEditingController();
   TextEditingController _password = TextEditingController();
+  SessionController _sessionController = Get.find<SessionController>();
 
   FirebaseAuth auth = FirebaseAuth.instance;
+  forgotPassword() {
+    auth.sendPasswordResetEmail(email: _email.text);
+  }
 
   signIn() async {
     UserCredential userCredential = await auth.signInWithEmailAndPassword(
@@ -33,7 +39,10 @@ class _LoginPageState extends State<LoginPage> {
 
   setSession() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
+
     preferences.setString('Email', _email.text);
+    _sessionController.setUserSession(_email.text);
+
     BmiScreen.userId = _email.text;
   }
 
@@ -140,11 +149,16 @@ class _LoginPageState extends State<LoginPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  Text(
-                    'Forgot Password?',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 15, color: Colors.blue),
-                  ),
+                  TextButton(
+                    onPressed: () {
+                      forgotPassword();
+                    },
+                    child: Text(
+                      'Forgot Password?',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 15, color: Colors.blue),
+                    ),
+                  )
                 ],
               ),
               SizedBox(height: 70),
