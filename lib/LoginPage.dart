@@ -151,6 +151,8 @@ class _LoginPageState extends State<LoginPage> {
                 children: [
                   TextButton(
                     onPressed: () {
+                      Get.snackbar('Set New Password', 'Check your email',
+                          snackPosition: SnackPosition.BOTTOM);
                       forgotPassword();
                     },
                     child: Text(

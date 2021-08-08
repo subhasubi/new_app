@@ -217,39 +217,42 @@ class _RegisterPageState extends State<RegisterPage> {
                 ),
               ),
               SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Radio(
-                    onChanged: (Gender? value) {
-                      setState(() {
-                        id = value!;
-                        print(id.index);
-                      });
-                    },
-                    groupValue: id,
-                    value: Gender.male,
-                  ),
-                  Text(
-                    'Male',
-                    style: TextStyle(fontSize: 18, color: Colors.white),
-                  ),
-                  SizedBox(height: 20),
-                  Radio(
-                    onChanged: (Gender? value) {
-                      setState(() {
-                        id = value!;
-                        print(id.index);
-                      });
-                    },
-                    groupValue: id,
-                    value: Gender.female,
-                  ),
-                  Text(
-                    'Female',
-                    style: TextStyle(fontSize: 18, color: Colors.white),
-                  ),
-                ],
+              Padding(
+                padding: const EdgeInsets.only(left: 60, right: 60),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Radio(
+                      onChanged: (Gender? value) {
+                        setState(() {
+                          id = value!;
+                          print(id.index);
+                        });
+                      },
+                      groupValue: id,
+                      value: Gender.male,
+                    ),
+                    Text(
+                      'Male',
+                      style: TextStyle(fontSize: 18, color: Colors.white),
+                    ),
+                    SizedBox(height: 20),
+                    Radio(
+                      onChanged: (Gender? value) {
+                        setState(() {
+                          id = value!;
+                          print(id.index);
+                        });
+                      },
+                      groupValue: id,
+                      value: Gender.female,
+                    ),
+                    Text(
+                      'Female',
+                      style: TextStyle(fontSize: 18, color: Colors.white),
+                    ),
+                  ],
+                ),
               ),
               SizedBox(height: 60),
               CustomButton(
